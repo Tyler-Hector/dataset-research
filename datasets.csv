@@ -1,0 +1,9 @@
+Number,Student,Source,Link,Dataset Name,Description
+1,Daniel Son,Huggingface,https://huggingface.co/datasets/whyoke/segmentation_drone,segmentation_drone,Drone/ISR images
+2,Daniel Son,Huggingface,https://huggingface.co/datasets/INS-IntelligentNetworkSolutions/Waste-Dumpsites-DroneImagery,Waste-Dumpsites-DroneImagery,Drone/ISR images
+3,Daniel Son,Huggingface,https://huggingface.co/datasets/kitofrank/RFUAV,RFUAV,RF Waveforms
+4,Ty hecht,Kaggle,https://www.kaggle.com/datasets/bulentsiyah/semantic-drone-dataset/data,Aerial Semantic Segmentation Drone Dataset,Drone/ISR images
+5,Ty hecht,Kaggle,https://www.kaggle.com/datasets/nathanlee326/hovering-uavs-rf-fingerprinting-dataset,"Hovering UAVs RF Fingerprinting Dataset
+",RF Waveforms
+6,Ty Hecht,Kaggle ,https://www.kaggle.com/datasets/aleksandrdubrovin/the-radarscenes-data-set,The RadarScenes data set,Automotive radar
+7,Daniel Son,Huggingface,https://github.com/joedlopes/carla-simulator-multimodal-sensing,carla-simulator-multimodal-sensing,Automotive radar

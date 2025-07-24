@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Augmentation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylelogo.css') }}">
+
+    <script>
+        let selected = null;
+
+        function handleClick(answer) {
+            selected = answer;
+            console.log("Selected:", selected);
+        }
+
+        function nextPlot() {
+            if (!selected) {
+                alert("Please select Yes or No before clicking Next.");
+                return;
+            }
+
+            fetch("/next", {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ valid: selected })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update image and reset selection
+                    document.getElementById("plot-img").src = "/plot?" + new Date().getTime();
+                    selected = null;
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home_page') }}">Home</a></li>
+                <li><a href="{{ url_for('augmentation_page') }}">Augmentation</a></li>
+                <li><a href="aboutus.html">About Us</a></li>
+            </ul>
+        </nav>
+    </header> 
+     <div class="question"> 
+     <p>Is this trajectory data valid?</p>
+     </div>
+     
+     <div class="form-container">
+        
+        <div class="buttons">
+            <button1 onclick="handleClick('yes')">Yes</button1>
+            <button2 onclick="handleClick('no')">No</button2>
+            <button class="next-button" onclick="nextPlot()">Next</button>
+        </div>
+        <div class="trajectory-image">
+            <img id="plot-img" src="{{ url_for('plot') }}" alt="Trajectory Plot" width="600">
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+Number,Student,Source,Link,Dataset Name,Description
+1,Daniel Son,Huggingface,whyoke/segmentation_drone · Datasets at Hugging Face,segmentation_drone,Drone/ISR images
+2,Daniel Son,Huggingface,https://huggingface.co/datasets/INS-IntelligentNetworkSolutions/Waste-Dumpsites-DroneImagery,Waste-Dumpsites-DroneImagery,Drone/ISR images
+3,Daniel Son,Huggingface,https://huggingface.co/datasets/kitofrank/RFUAV,RFUAV,RF Waveforms
+4,Ty hecht,Kaggle,https://www.kaggle.com/datasets/bulentsiyah/semantic-drone-dataset/data,Aerial Semantic Segmentation Drone Dataset,Drone/ISR images
+5,Ty hecht,Kaggle,https://www.kaggle.com/datasets/nathanlee326/hovering-uavs-rf-fingerprinting-dataset,"Hovering UAVs RF Fingerprinting Dataset
+",RF Waveforms
+6,Ty Hecht,Kaggle ,https://www.kaggle.com/datasets/aleksandrdubrovin/the-radarscenes-data-set,The RadarScenes data set,Automotive radar
+7,Daniel Son,Huggingface,https://github.com/joedlopes/carla-simulator-multimodal-sensing,carla-simulator-multimodal-sensing,Automotive radar
+8,Daniel Son,"USAF, SDMS",https://www.sdms.afrl.af.mil/data_download/index.php?r=sdms/public-data-list,Gotcha Volmetric SAR Dataset,Aerial/SAR images
+9,Aadit Jain,Kaggle,https://www.kaggle.com/datasets/setarehkian/udayton24automotive-datasets,UDayton24Automotive Datasets,Automotive radar
+10,Aadit Jain,Kaggle,https://www.kaggle.com/datasets/daniaherzalla/radio-frequency-jamming,RF Jamming Dataset,RF Waveforms
+11,Aadit Jain,Kaggle,https://www.kaggle.com/datasets/sudipchakrabarty/kiit-mita,KIIT-MiTA,Drone/ISR images
+12,Katie Peng,Kaggle,https://www.kaggle.com/datasets/humansintheloop/semantic-segmentation-of-aerial-imagery,Semantic segmentation of aerial imagery,Aerial/SAR images
+13,Katie Peng,Kaggle,https://www.kaggle.com/datasets/aleksandrdubrovin/the-radarscenes-data-set,The RadarScenes data set,Automotive radar
+14,Katie Peng,Kaggle,https://www.kaggle.com/datasets/sgluege/noisy-drone-rf-signal-classification,Noisy Drone RF Signal Classification,RF Waveforms
+15,Katie Peng,Kaggle,https://www.kaggle.com/datasets/suraj520/rf-signal-data,RF Signal Data,RF Waveforms
+16,Katie Peng,Kaggle,https://www.kaggle.com/datasets/bulentsiyah/semantic-drone-dataset/data,Aerial Semantic Segmentation Drone Dataset,Aerial/SAR images
+17,Richard Kinzinger,Mendeley Data,https://data.mendeley.com/datasets/zcsj2g2m4c/4,Drone Dataset: Amateur Unmanned Air Vehicle Detection,Drone/ISR images
+18,Richard Kinzinger,Mendeley Data,https://data.mendeley.com/datasets/cd5z895tr2/1,AOD 4: Dataset for Air Borne Object Detection,Drone/ISR images
+19,Richard Kinzinger,Esri,https://www.esri.com/en-us/arcgis/products/arcgis-reality/resources/sample-drone-datasets,Sample Drone Datasets,Drone/ISR images
+20,Richard Kinzinger,Oxford,https://oxford-robotics-institute.github.io/radar-robotcar-dataset/datasets,Oxford Radar RoboCar Datasets,Automotive radar
+21,Sonakshi Bilas,NIST,PDR: Dataset presenting improved bandwidth in Rydberg atom electrometry with an optical frequency comb probe,Dataset presenting improved bandwidth in Rydberg atom electrometry with an optical frequency comb probe,RF Waveforms
+22,Sonakshi Bilas,NIST,PDR: Context-aware mmWave RF Signals Dataset with Lidar and Camera,Context-aware mmWave RF Signals Dataset with Lidar and Camera,RF Waveforms
+23,Sonakshi Bilas,Zenodo/RadarScenes,RadarScenes: A Real-World Radar Point Cloud Data Set for Automotive Applications,RadarScenes: A Real-World Radar Point Cloud Data Set for Automotive Applications,Automotive radar
+24,Sonakshi Bilas,Umbra/AWS,Umbra Synthetic Aperture Radar (SAR) Open Data - Registry of Open Data on AWS,Umbra Synthetic Aperture Radar (SAR) Open Data,Aerial/SAR images
+25,Sonakshi Bilas,Kaggle,https://www.kaggle.com/datasets/sandhiwangiyana/spacenet-6-multisensor-allweather-mapping,SpaceNet 6 Multi-Sensor All-Weather Mapping,Aerial/SAR images

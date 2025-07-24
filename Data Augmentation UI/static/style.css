@@ -1,0 +1,157 @@
+.logo {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.title{
+  font-size: 4em;
+  text-align: center;
+  color:aliceblue;
+  padding: 15px 0; 
+  font-family: 'Orbitron', sans-serif;
+
+}
+/* Add your styles here */
+body {
+  background: #010101;
+  color:aliceblue;
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+header {
+  background-color: white;      /* Background of the menu bar */
+  padding: 15px 0;              /* Top and bottom spacing */
+  text-align: center;           /* Center the items */
+}
+
+nav ul {
+  padding: 0;
+  margin: 0;
+}
+
+nav li {
+  display: inline-block;
+  margin: 0 15px;
+}
+
+
+
+nav a {
+  color: black;
+  background-color: white;
+  padding: 10px 15px;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+nav a:hover {
+  background-color: #e0e0e0;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: black;
+}
+
+.question p {
+  font-size: 2em;
+  color: #ccc;
+  font-weight: 500;
+  line-height: 1.6;
+  margin: 10px 0 20px 0;
+  border-left: 4px solid #555;
+  padding-left: 60px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  max-width: 900px;
+  ;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh; /* vertically center */
+    padding-left: 50px; /* indent from the left */
+}
+
+
+
+.form-container button1 {
+    font-size: 1.5em;
+    padding: 20px 40px;
+    margin-bottom: 20px;
+    width: 200px;
+    text-align: right;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    background-color: #21362c;
+    color: white;
+    transition: background-color 0.3s;
+    display: inline-block;
+    
+    
+}
+.form-container button2 {
+    font-size: 1.5em;
+    padding: 20px 40px;
+    margin-bottom: 20px;
+    width: 200px;
+    text-align: right;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    background-color: #502424;
+    color: white;
+    transition: background-color 0.3s;
+    display: inline-block;
+    
+}
+
+.form-container button1:hover {
+    background-color: #6a6a6a;
+}
+
+
+.form-container button2:hover {
+    background-color: #6a6a6a;
+}
+
+.next-button {
+    font-size: 1.5em;
+    padding: 20px 40px;
+    margin-bottom: 40px;
+    width: 200px;
+    background-color: #1e0e58; /* green */
+    color: white;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: row;  /* side by side */
+  align-items: center;  /* vertically center if you want */
+  height: 100vh;        /* full height */
+  padding-left: 50px;
+  gap: 40px;            /* space between buttons and image */
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* optionally add spacing */
+  gap: 20px;
+}
+
+.trajectory-image img {
+  max-width: 400px;   /* adjust as needed */
+  height: auto;
+  border: 2px solid white; /* optional styling */
+  border-radius: 8px;
+}

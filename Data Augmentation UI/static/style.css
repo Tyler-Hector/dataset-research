@@ -1,41 +1,47 @@
-.logo {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
+/* General Layout */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #0d0d0d;
+  color: aliceblue;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
-.title{
+/* Logo at bottom center */
+.logo {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Title styling */
+.title {
   font-size: 4em;
   text-align: center;
-  color:aliceblue;
-  padding: 15px 0; 
+  color: aliceblue;
+  padding: 30px 0;
   font-family: 'Orbitron', sans-serif;
+}
 
-}
-/* Add your styles here */
-body {
-  background: #010101;
-  color:aliceblue;
-  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
-}
+/* Header nav */
 header {
-  background-color: white;      /* Background of the menu bar */
-  padding: 15px 0;              /* Top and bottom spacing */
-  text-align: center;           /* Center the items */
+  background-color: white;
+  padding: 15px 0;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 nav ul {
   padding: 0;
   margin: 0;
+  list-style: none;
 }
 
 nav li {
   display: inline-block;
-  margin: 0 15px;
+  margin: 0 20px;
 }
-
-
 
 nav a {
   color: black;
@@ -51,107 +57,130 @@ nav a:hover {
   background-color: #e0e0e0;
 }
 
-body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background-color: black;
-}
-
+/* Question text box */
 .question p {
   font-size: 2em;
   color: #ccc;
   font-weight: 500;
   line-height: 1.6;
-  margin: 10px 0 20px 0;
+  margin: 10px 0 30px 0;
   border-left: 4px solid #555;
-  padding-left: 60px;
-  padding-bottom: 10px;
-  padding-top: 10px;
+  padding: 15px 60px;
   max-width: 900px;
-  ;
 }
 
-.form-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 100vh; /* vertically center */
-    padding-left: 50px; /* indent from the left */
-}
-
-
-
-.form-container button1 {
-    font-size: 1.5em;
-    padding: 20px 40px;
-    margin-bottom: 20px;
-    width: 200px;
-    text-align: right;
-    cursor: pointer;
-    border: none;
-    border-radius: 8px;
-    background-color: #21362c;
-    color: white;
-    transition: background-color 0.3s;
-    display: inline-block;
-    
-    
-}
-.form-container button2 {
-    font-size: 1.5em;
-    padding: 20px 40px;
-    margin-bottom: 20px;
-    width: 200px;
-    text-align: right;
-    cursor: pointer;
-    border: none;
-    border-radius: 8px;
-    background-color: #502424;
-    color: white;
-    transition: background-color 0.3s;
-    display: inline-block;
-    
-}
-
-.form-container button1:hover {
-    background-color: #6a6a6a;
-}
-
-
-.form-container button2:hover {
-    background-color: #6a6a6a;
-}
-
-.next-button {
-    font-size: 1.5em;
-    padding: 20px 40px;
-    margin-bottom: 40px;
-    width: 200px;
-    background-color: #1e0e58; /* green */
-    color: white;
-}
-
+/* Form container: full-screen layout */
 .form-container {
   display: flex;
-  flex-direction: row;  /* side by side */
-  align-items: center;  /* vertically center if you want */
-  height: 100vh;        /* full height */
-  padding-left: 50px;
-  gap: 40px;            /* space between buttons and image */
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 120px);
+  padding: 0 60px;
+  gap: 60px;
 }
 
+/* Buttons container (vertical) */
 .buttons {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* optionally add spacing */
   gap: 20px;
 }
 
+/* Shared button styling */
+.form-container button1,
+.form-container button2,
+.next-button {
+  font-size: 1.3em;
+  padding: 16px 32px;
+  width: 220px;
+  cursor: pointer;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  transition: background-color 0.3s;
+  text-align: center;
+}
+
+/* Individual button colors */
+.form-container button1 {
+  background-color: #21362c;
+}
+
+.form-container button2 {
+  background-color: #502424;
+}
+
+.next-button {
+  background-color: #1e0e58;
+}
+
+/* Hover state (shared) */
+.form-container button1:hover,
+.form-container button2:hover,
+.next-button:hover {
+  background-color: #6a6a6a;
+}
+
+/* Trajectory image styling */
 .trajectory-image img {
-  max-width: 400px;   /* adjust as needed */
+  max-width: 700px;
+  width: 100%;
   height: auto;
-  border: 2px solid white; /* optional styling */
-  border-radius: 8px;
+  border: 3px solid white;
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+}
+
+
+h1 {
+  text-align: center;
+  color: #00d1ff;
+}
+
+p {
+  max-width: 800px;
+  margin: 20px auto;
+  text-align: center;
+  font-size: 1.2em;
+}
+
+.section {
+  max-width: 800px;
+  margin: 40px auto;
+}
+
+h2 {
+  color: #00ffaa;
+  border-bottom: 2px solid #00ffaa;
+  padding-bottom: 5px;
+}
+
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+li {
+  background-color: #1a1a1a;
+  margin: 8px 0;
+  padding: 10px 15px;
+  border-radius: 5px;
+}
+
+
+li4{
+  background-color: #1a1a1a;
+  margin: 8px 0;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 2em;
+  color: #ccc;
+  font-weight: 500;
+  line-height: 1.6;
+  margin: 10px 0 30px 0;
+  border-left: 4px solid #555;
+  padding: 15px 60px;
+  max-width: 900px;
 }

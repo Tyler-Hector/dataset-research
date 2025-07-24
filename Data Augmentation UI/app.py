@@ -7,7 +7,7 @@ import os  # <-- For creating directories and file handling
 app = Flask(__name__)
 
 # Load data only once
-data = np.loadtxt(r'C:\Users\debas\AI trajectory\dataset-research\DataSet1\day1\7days1\processed_data\test\2.txt')
+data = np.loadtxt(r"C:\Users\debas\AI trajectory\DataSet1\day1\7days1\processed_data\test\2.txt")
 index = [0]
 
 @app.route('/')
@@ -17,6 +17,9 @@ def home_page():
 @app.route('/augmentation')
 def augmentation_page():
     return render_template('augmentation.html')
+@app.route('/aboutus')
+def aboutus_page():
+    return render_template('aboutus.html')
 
 @app.route('/plot')
 def plot():

@@ -1,13 +1,16 @@
 from flask import Flask, render_template, request, jsonify, send_file
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib as mpl
+mpl.use('agg')
 import io
 import os  # <-- For creating directories and file handling
 
 app = Flask(__name__)
 
 # Load data only once
-data = np.loadtxt(r"C:\Users\debas\AI trajectory\DataSet1\day1\7days1\processed_data\test\2.txt")
+data = pd.read_csv('Data Preprocessing/final/combo_Synthetic-Oslo_1.csv').to_numpy()
 index = [0]
 
 @app.route('/')
@@ -25,14 +28,14 @@ def aboutus_page():
 def plot():
     i = index[0]
     
-    segment = data[i:i+10]  # Plot 10 rows for each trajectory segment
+    segment = data[i:i+200]
 
     if segment.shape[0] < 2:
         return jsonify(error="Not enough data to plot a trajectory.")
 
-    x = segment[:, 2]  # X column
+    x = segment[:, 0]  # X column
     y = segment[:, 1]  # Y column
-    z = segment[:, 3]  # Z column
+    z = segment[:, 2]  # Z column
 
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
@@ -66,12 +69,11 @@ def next_point():
     x, y, z = row[2], row[1], row[3]
 
     if valid == "yes":
-        save_path = save_path = r"C:\Users\debas\AI trajectory\dataset-research\Data Augmentation UI\validated_data\saved_coords.txt"
+        save_path = 'Data Augmentation UI/validated_data/'
 
         os.makedirs(os.path.dirname(save_path), exist_ok=True)  # creates folder if needed
-        with open(save_path, 'a') as f:
-            f.write(f"{x}, {y}, {z}\n")  # appends coordinates to file
-            print(f"Saved coords: {x}, {y}, {z} to {save_path}")
+        np.savetxt(save_path+'combo_Synthetic-Oslo_1.csv', data, delimiter=',')  # appends coordinates to file
+        print(f"Saved coords: {x}, {y}, {z} to {save_path}")
 
     index[0] += 1
     if index[0] >= len(data):

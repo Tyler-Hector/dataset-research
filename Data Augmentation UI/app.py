@@ -27,15 +27,13 @@ def aboutus_page():
 @app.route('/plot')
 def plot():
     i = index[0]
-    
-    segment = data[i:i+200]
 
-    if segment.shape[0] < 2:
+    if data.shape[0] < 2:
         return jsonify(error="Not enough data to plot a trajectory.")
 
-    x = segment[:, 0]  # X column
-    y = segment[:, 1]  # Y column
-    z = segment[:, 2]  # Z column
+    x = data[:, 0]  # X column
+    y = data[:, 1]  # Y column
+    z = data[:, 2]  # Z column
 
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
@@ -69,10 +67,10 @@ def next_point():
     x, y, z = row[2], row[1], row[3]
 
     if valid == "yes":
-        save_path = 'Data Augmentation UI/validated_data/'
+        save_path = 'validated_data/'
 
         os.makedirs(os.path.dirname(save_path), exist_ok=True)  # creates folder if needed
-        np.savetxt(save_path+'combo_Synthetic-Oslo_1.csv', data, delimiter=',')  # appends coordinates to file
+        pd.DataFrame(data, columns=['lat','lon','alt','time']).to_csv(save_path+'combo_Synthetic-Oslo_1.csv', index=False)
         print(f"Saved coords: {x}, {y}, {z} to {save_path}")
 
     index[0] += 1
@@ -80,7 +78,6 @@ def next_point():
         index[0] = 0
 
     return jsonify(success=True)
-
 
 if __name__ == '__main__':
     app.run(debug=True)

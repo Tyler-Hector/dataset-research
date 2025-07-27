@@ -1,4 +1,5 @@
-This project is going to be the repository for our AI infrastructure!
+This repository has all the info for the HUVTSP Technical Team 5's project for Vanguard Defense.
 
-dataset search queries environment:
-1. Park (picnic) 2. Ski moutain 3. Battlefield 4. Forest 5. Highway 6. Beach 7. Street market 8. Farm
+Problem Statement: Military defense systems would need an anti-ballistic missile trajectory prediction model when facing fast-moving, evasive airborne threats because accurately determining the optimal interception path in real time is critical for national security and minimizing potential damage.
+Keywords: anti ballistic missile, trajectory prediction, AI, data analysis
+

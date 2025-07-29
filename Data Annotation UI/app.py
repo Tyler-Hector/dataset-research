@@ -27,7 +27,7 @@ else:
     dataset_num=3
 
 # Load data only once
-data = pd.read_csv('Data Preprocessing/'+dataset+'/processed_data/TRAJ_1.csv').to_numpy()
+data = pd.read_csv('Data Preprocessing/'+dataset+'/processed_data/TRAJ_'+str(count)+'.csv').to_numpy()
 max = [3088,6272,5731,5000]
 index=[0]
 

@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 plt.style.use('_mpl-gallery')
-
+print("main used")
 # Load the data
 data = np.loadtxt(r'C:\Users\debas\AI trajectory\dataset-research\DataSet1\day1\7days1\processed_data\test\2.txt')
 

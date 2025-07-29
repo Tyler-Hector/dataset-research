@@ -1,3 +1,4 @@
+import sys
 from flask import Flask, render_template, request, jsonify, send_file
 import numpy as np
 import pandas as pd
@@ -9,9 +10,26 @@ import os  # <-- For creating directories and file handling
 
 app = Flask(__name__)
 
+# IMPORTANT VARIABLES ------------------------------------------------
+dataset="AirLab"
+start=1
+
+
+count=start
+dataset_num=-1
+if(dataset=="AirLab"):
+    dataset_num=0
+elif(dataset=="Oslo"):
+    dataset_num=1
+elif(dataset=="Synthetic"):
+    dataset_num=2
+else:
+    dataset_num=3
+
 # Load data only once
-data = pd.read_csv('Data Preprocessing/final/combo_Synthetic-Oslo_1.csv').to_numpy()
-index = [0]
+data = pd.read_csv('Data Preprocessing/'+dataset+'/processed_data/TRAJ_1.csv').to_numpy()
+max = [3088,6272,5731,5000]
+index=[0]
 
 @app.route('/')
 def home_page():
@@ -26,6 +44,10 @@ def aboutus_page():
 
 @app.route('/plot')
 def plot():
+    global data
+    count = request.args.get("count", type=int)
+    print("Plotting trajectory:", count)  # <-- This should appear in your terminal
+    
     i = index[0]
 
     if data.shape[0] < 2:
@@ -59,24 +81,30 @@ def plot():
 
 @app.route('/next', methods=['POST'])
 def next_point():
+    global data, count
     content = request.get_json()
     valid = content.get("valid")  # 'yes' or 'no'
     print(request)
     i = index[0]
     row = data[i]
     x, y, z = row[2], row[1], row[3]
-
+    
     if valid == "yes":
         save_path = 'validated_data/'
 
         os.makedirs(os.path.dirname(save_path), exist_ok=True)  # creates folder if needed
-        pd.DataFrame(data, columns=['lat','lon','alt','time']).to_csv(save_path+'combo_Synthetic-Oslo_1.csv', index=False)
+        pd.DataFrame(data, columns=['lat','lon','alt','time']).to_csv(save_path+dataset+str(count)+'.csv', index=False)
         print(f"Saved coords: {x}, {y}, {z} to {save_path}")
 
     index[0] += 1
     if index[0] >= len(data):
         index[0] = 0
-
+    
+    count+=1
+    if(count>=max[dataset_num]):
+        sys.exit()
+    data = pd.read_csv('Data Preprocessing/'+dataset+'/processed_data/TRAJ_'+str(count)+'.csv').to_numpy()
+    
     return jsonify(success=True)
 
 if __name__ == '__main__':

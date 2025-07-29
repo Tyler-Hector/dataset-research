@@ -22,16 +22,15 @@
             fetch("/next", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ valid: selected })
+                body: JSON.stringify({ valid: selected})
+            })
+            .then(data => {
+                // Update image and reset selection
+                document.getElementById("plot-img").src = "/plot?" + new Date().getTime();
+                selected = null
+                
             })
             .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Update image and reset selection
-                    document.getElementById("plot-img").src = "/plot?" + new Date().getTime();
-                    selected = null;
-                }
-            })
             .catch(error => {
                 console.error("Error:", error);
             });

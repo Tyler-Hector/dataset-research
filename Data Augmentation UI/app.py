@@ -61,7 +61,7 @@ def plot():
 def next_point():
     content = request.get_json()
     valid = content.get("valid")  # 'yes' or 'no'
-
+    print(request)
     i = index[0]
     row = data[i]
     x, y, z = row[2], row[1], row[3]

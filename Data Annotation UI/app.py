@@ -11,7 +11,7 @@ import os  # <-- For creating directories and file handling
 app = Flask(__name__)
 
 # IMPORTANT VARIABLES ------------------------------------------------
-dataset="AirLab"
+dataset="Oslo"
 start=1
 
 

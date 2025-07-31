@@ -3,3 +3,6 @@ matplotlib
 pyarrow
 numpy
 streamlit
+notebook jupyterlab jupyter
+ipykernel
+scikit-learn

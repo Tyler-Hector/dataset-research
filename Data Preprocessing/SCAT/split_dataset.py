@@ -2,32 +2,42 @@ import pandas as pd
 import os
 from sklearn.model_selection import train_test_split
 
-# Config
-merged_file = r"C:\Users\flyin\OneDrive\Documents\GitHub\dataset-research\processed_data\SCAT_cleaned_full.csv"
-output_dir = r"C:\Users\flyin\OneDrive\Documents\GitHub\dataset-research\validated_data"
+# config
+merged_file = r"C:\Users\flyin\OneDrive\Documents\GitHub\dataset-research-SCAT\processed_data\SCAT_cleaned_full.csv"
+output_dir = r"C:\Users\flyin\OneDrive\Documents\GitHub\dataset-research-SCAT\validated_data"
 output_parquet = os.path.join(output_dir, "validated_cleaned.parquet")
-output_csv = os.path.join(output_dir, "validated_cleaned.csv")  # optional
+output_csv = os.path.join(output_dir, "validated_cleaned.csv")
 min_points = 10
 random_seed = 42
-save_csv = True  # Set to True if you want CSV in addition to Parquet
+save_csv = True
 
-# Create output directory if not exists
+# make sure output folder exists
 os.makedirs(output_dir, exist_ok=True)
 
-print(f"Loading merged file from {merged_file}...")
+# load merged file
+print(f"Loading merged dataset from {merged_file}...")
 df = pd.read_csv(merged_file)
 
+print(f"Loaded {len(df):,} rows.")
+print("Columns:", list(df.columns))
+
+# verify required columns
 required_cols = {"flight_id", "time", "lat", "lon", "alt"}
 if not required_cols.issubset(df.columns):
     raise ValueError(f"Missing required columns. Found: {df.columns}")
 
-print(f"Loaded {len(df)} rows. Cleaning and combining into one file...")
+# fail if weather columns missing
+if not {"temp", "wind_spd", "wind_dir"}.issubset(df.columns):
+    raise ValueError("Weather columns missing in merged file! Aborting to prevent overwriting.")
+else:
+    print("Weather columns found.")
 
+# clean & validate flights
+print("\nCleaning flights...")
 cleaned_flights = []
 valid_ids = []
 invalid_ids = []
 
-# Clean by grouping per flight_id
 for flight_id, flight_df in df.groupby("flight_id"):
     flight_df = flight_df.sort_values("time")
     flight_df = flight_df.dropna(subset=["lat", "lon", "alt", "time"])
@@ -43,24 +53,25 @@ for flight_id, flight_df in df.groupby("flight_id"):
     cleaned_flights.append(flight_df)
     valid_ids.append(flight_id)
 
-# Combine into one big DataFrame
+# combine everything
 combined_df = pd.concat(cleaned_flights, ignore_index=True)
-print(f"Combined {len(valid_ids)} flights into {len(combined_df)} rows.")
+print(f"Combined {len(valid_ids):,} valid flights into {len(combined_df):,} rows.")
+print(f"Skipped {len(invalid_ids):,} flights (too few points).")
 
-# Save as Parquet (fast and compressed)
+# save validated dataset
 combined_df.to_parquet(output_parquet, index=False)
-print(f"Saved cleaned data to {output_parquet}")
+print(f"Saved validated data to {output_parquet}")
 
-# Save as CSV
 if save_csv:
     combined_df.to_csv(output_csv, index=False)
     print(f"Saved CSV copy to {output_csv}")
 
-# Train/Val/Test split by flight_id
+# split by flight_id
+print("\nSplitting flights into Train/Val/Test...")
 train_ids, temp_ids = train_test_split(valid_ids, test_size=0.3, random_state=random_seed)
 val_ids, test_ids = train_test_split(temp_ids, test_size=0.5, random_state=random_seed)
 
-# Save ID files
+# save ID files
 with open(os.path.join(output_dir, "train_ids.txt"), "w") as f:
     f.write("\n".join(map(str, train_ids)))
 with open(os.path.join(output_dir, "val_ids.txt"), "w") as f:
@@ -68,6 +79,7 @@ with open(os.path.join(output_dir, "val_ids.txt"), "w") as f:
 with open(os.path.join(output_dir, "test_ids.txt"), "w") as f:
     f.write("\n".join(map(str, test_ids)))
 
-print("Train/Val/Test split complete:")
-print(f"Train: {len(train_ids)}, Val: {len(val_ids)}, Test: {len(test_ids)}")
-print(f"Skipped {len(invalid_ids)} flights (too few points).")
+print("\nSplit complete:")
+print(f"Train: {len(train_ids):,}, Val: {len(val_ids):,}, Test: {len(test_ids):,}")
+print(f"Total validated flights: {len(valid_ids):,}")
+print(f"Files saved in: {output_dir}")

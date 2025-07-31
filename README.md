@@ -78,14 +78,36 @@ Develop a trajectory analysis pipeline that predicts the future positions of air
   - Generate a multi-flight comparison (2D).
   - Save all plots in `plots/`.
 
+### 7 Visualization Test Script
+- Built an interactive tool to label flight trajectories as Valid or Invalid:
+  -Loads validated_cleaned.parquet.
+  -3D visualization with Plotly (Lat, Lon, Alt).
+  -Keyboard shortcuts: V (Valid), I (Invalid), S (Skip).
+  -Saves annotations to annotations.csv every 10 labels.
+  -Tracks progress in the sidebar
+
 ---
+
+### **8. Weather Data Integration**
+- Enhanced preprocessing to include weather features from `grib_meteo.json`:
+  - `temp`: Temperature at the aircraft's position.
+  - `wind_spd`: Wind speed.
+  - `wind_dir`: Wind direction.
+- Matching strategy:
+  - Used `cKDTree` for fast nearest-neighbor search between flight coordinates and weather grid points.
+  - Added weather columns to every trajectory point in the merged file.
+- Updated cleaning script:
+  - Validates presence of weather columns before creating `validated_cleaned.parquet`.
+  - Splits remain consistent (IDs unchanged).
+- Final validated dataset includes: ['flight_id', 'time', 'lat', 'lon', 'alt', 'temp', 'wind_spd', 'wind_dir']
+
 
 ## Setup
 Clone the repo and create a virtual environment:
 
 ```bash
 git clone <your-repo-url>
-cd dataset-research
+cd dataset-research-SCAT
 
 python -m venv venv
 # Activate:
@@ -93,6 +115,3 @@ python -m venv venv
 source venv/bin/activate      (macOS/Linux)
 
 pip install -r requirements.txt
-
-## Requirements
-pandas

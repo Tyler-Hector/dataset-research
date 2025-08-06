@@ -1,8 +1,28 @@
 pandas
-matplotlib
-pyarrow
 numpy
-streamlit
-notebook jupyterlab jupyter
+matplotlib
+seaborn
+pyarrow
+fastparquet
+
+# Jupyter & notebooks
+notebook
+jupyterlab
 ipykernel
+
+# Machine Learning
 scikit-learn
+torch
+torchaudio
+torchvision
+
+# Streamlit app
+streamlit
+plotly
+
+# Progress bar & optimization
+tqdm
+optuna
+
+# Optional logging
+wandb

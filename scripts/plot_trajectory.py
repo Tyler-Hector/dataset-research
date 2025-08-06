@@ -1,9 +1,9 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+import numpy as np
 import os
 import random
-import numpy as np
 
 def plot_flight(
     parquet_path="validated_data/validated_cleaned.parquet",
@@ -14,45 +14,49 @@ def plot_flight(
     sample_points=None,
     exaggerate_altitude=True,
     both=False,
-    color_by_time=True
+    color_by="time",  # options: "time", "temp", "wind_spd"
+    show_wind=False   # overlay wind arrows in 2D
 ):
     """
-    Plot a single flight trajectory from the Parquet dataset with enhancements.
+    Plot a single flight trajectory with weather features.
 
     Parameters:
     ----------
     parquet_path : str
-        Path to the Parquet dataset.
-    flight_id : str or int or None
-        ID of the flight to plot. If None, selects a random flight.
+        Path to the validated Parquet dataset.
+    flight_id : str or None
+        ID of the flight to plot. If None, picks a random flight.
     mode : str
-        "2D" for lat-lon plot, "3D" for lat-lon-alt plot. Ignored if both=True.
+        "2D" or "3D". Ignored if both=True.
     save : bool
-        If True, saves the plot as PNG in the specified directory.
+        Save the plot if True.
     output_dir : str
-        Directory to save plots if save=True.
+        Directory for saving plots.
     sample_points : int or None
-        If provided, randomly samples this many points for plotting.
+        Randomly sample N points from the flight for plotting.
     exaggerate_altitude : bool
-        If True, adds padding to z-axis for better visibility.
+        Add extra z-axis padding for 3D plot.
     both : bool
-        If True, generates both 2D and 3D plots in one call.
-    color_by_time : bool
-        If True, adds a color gradient by time to show flight progression.
+        Generate both 2D and 3D plots.
+    color_by : str
+        "time", "temp", or "wind_spd".
+    show_wind : bool
+        If True, overlays wind direction arrows in 2D.
     """
+
     # Load data
-    df = pd.read_parquet(parquet_path, columns=["flight_id", "lat", "lon", "alt", "time"])
+    df = pd.read_parquet(parquet_path, columns=["flight_id", "lat", "lon", "alt", "time", "temp", "wind_spd", "wind_dir"])
     df["flight_id"] = df["flight_id"].astype(str)
 
-    # Pick random flight if none provided
+    # Pick random flight if not provided
     if flight_id is None:
         flight_id = random.choice(df["flight_id"].unique())
         print(f"Randomly selected flight_id: {flight_id}")
 
-    # Filter and sort
+    # Filter for the flight
     flight_df = df[df["flight_id"] == str(flight_id)].copy()
     if flight_df.empty:
-        print(f"No data found for flight_id {flight_id}.")
+        print(f"No data found for flight_id {flight_id}")
         return
 
     flight_df = flight_df.sort_values("time")
@@ -61,11 +65,18 @@ def plot_flight(
     if sample_points and len(flight_df) > sample_points:
         flight_df = flight_df.sample(n=sample_points).sort_values("time")
 
-    # Prepare color gradient if enabled
-    colors = None
-    if color_by_time:
+    # Prepare color mapping
+    colors, cmap = None, None
+    if color_by == "temp":
+        colors = flight_df["temp"]
+        cmap = "coolwarm"
+    elif color_by == "wind_spd":
+        colors = flight_df["wind_spd"]
+        cmap = "plasma"
+    elif color_by == "time":
         t = np.linspace(0, 1, len(flight_df))
-        colors = plt.cm.viridis(t)  # Use a nice color map
+        colors = t
+        cmap = "viridis"
 
     if save:
         os.makedirs(output_dir, exist_ok=True)
@@ -73,13 +84,18 @@ def plot_flight(
     # Helper: Plot 2D
     def plot_2d():
         plt.figure(figsize=(8, 6))
-        if color_by_time:
-            plt.scatter(flight_df["lon"], flight_df["lat"], c=t, cmap="viridis", s=5)
-        else:
-            plt.plot(flight_df["lon"], flight_df["lat"], marker="o", markersize=1, linewidth=0.5)
-        # Start and end markers
-        plt.scatter(flight_df["lon"].iloc[0], flight_df["lat"].iloc[0], c="green", s=40, label="Start")
-        plt.scatter(flight_df["lon"].iloc[-1], flight_df["lat"].iloc[-1], c="red", s=40, label="End")
+        sc = plt.scatter(flight_df["lon"], flight_df["lat"], c=colors, cmap=cmap, s=10)
+        plt.scatter(flight_df["lon"].iloc[0], flight_df["lat"].iloc[0], c="green", s=50, label="Start")
+        plt.scatter(flight_df["lon"].iloc[-1], flight_df["lat"].iloc[-1], c="red", s=50, label="End")
+
+        if show_wind:
+            step = max(1, len(flight_df)//50)  # avoid clutter
+            for i in range(0, len(flight_df), step):
+                u = flight_df["wind_spd"].iloc[i] * np.cos(np.radians(flight_df["wind_dir"].iloc[i]))
+                v = flight_df["wind_spd"].iloc[i] * np.sin(np.radians(flight_df["wind_dir"].iloc[i]))
+                plt.arrow(flight_df["lon"].iloc[i], flight_df["lat"].iloc[i], u*0.01, v*0.01, head_width=0.05, color="blue")
+
+        plt.colorbar(sc, label=color_by)
         plt.xlabel("Longitude")
         plt.ylabel("Latitude")
         plt.title(f"Flight {flight_id} Trajectory (2D)")
@@ -95,10 +111,7 @@ def plot_flight(
     def plot_3d():
         fig = plt.figure(figsize=(10, 8))
         ax = fig.add_subplot(111, projection="3d")
-        if color_by_time:
-            ax.scatter(flight_df["lon"], flight_df["lat"], flight_df["alt"], c=t, cmap="viridis", s=5)
-        else:
-            ax.scatter(flight_df["lon"], flight_df["lat"], flight_df["alt"], s=3)
+        sc = ax.scatter(flight_df["lon"], flight_df["lat"], flight_df["alt"], c=colors, cmap=cmap, s=8)
         ax.scatter(flight_df["lon"].iloc[0], flight_df["lat"].iloc[0], flight_df["alt"].iloc[0], c="green", s=50)
         ax.scatter(flight_df["lon"].iloc[-1], flight_df["lat"].iloc[-1], flight_df["alt"].iloc[-1], c="red", s=50)
         ax.set_xlabel("Longitude")
@@ -107,6 +120,7 @@ def plot_flight(
         ax.set_title(f"Flight {flight_id} Trajectory (3D)")
         if exaggerate_altitude:
             ax.set_zlim(flight_df["alt"].min() - 50, flight_df["alt"].max() + 50)
+        fig.colorbar(sc, ax=ax, label=color_by)
         if save:
             filename = os.path.join(output_dir, f"flight_{flight_id}_3D.png")
             plt.savefig(filename)
@@ -114,7 +128,7 @@ def plot_flight(
         else:
             plt.show()
 
-    # Plot based on mode
+    # Generate plots
     if both:
         plot_2d()
         plot_3d()
@@ -126,7 +140,8 @@ def plot_flight(
         else:
             raise ValueError("mode must be '2D' or '3D'")
 
-# New: Multi-flight comparison (2D only)
+
+# Multi-flight comparison with weather info (2D only)
 def plot_multiple_flights(
     parquet_path="validated_data/validated_cleaned.parquet",
     flight_ids=None,
@@ -134,16 +149,6 @@ def plot_multiple_flights(
     save=False,
     output_dir="plots"
 ):
-    """
-    Plot multiple flights on one 2D map for comparison.
-
-    Parameters:
-    ----------
-    flight_ids : list of str or None
-        Specific flight IDs. If None, randomly picks `count` flights.
-    count : int
-        Number of random flights if flight_ids=None.
-    """
     df = pd.read_parquet(parquet_path, columns=["flight_id", "lat", "lon"])
     df["flight_id"] = df["flight_id"].astype(str)
 

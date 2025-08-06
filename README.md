@@ -1,117 +1,152 @@
-# Files and Folders Excluded by .gitignore
-- All virtual environments: venv/, .env/
-- Python cache: __pycache__/
-- Large data files: *.csv, *.zip, *.parquet
-- Data folders: raw_data/, processed_data/, validated_data/, temp_data/, plots/
-- System files: .DS_Store
+# SCAT Flight Trajectory Prediction Pipeline
 
-# SCAT Flight Trajectory Analysis Pipeline
+This repository implements an end-to-end machine learning pipeline to process, analyze, and forecast aircraft flight trajectories using the SCAT dataset. It includes preprocessing, visualization, annotation tools, weather integration, and a GRU-based deep learning model.
+
+## Folder Structure
+
+* `raw_data/` - Original SCAT JSON/CSV files (ignored by git)
+* `validated_data/` - Cleaned + weather-integrated dataset (.parquet format)
+* `models/` - Contains trained model weights (e.g., `best.pt`)
+* `plots/` - Output from trajectory visualization tools
+* `error_gallery/` - Samples of failure cases from validation
+* `data/` - Placeholder for GitHub structure (contains only `.gitkeep`)
+
+Note: Data folders are visible in the repo structure, but actual datasets are excluded using `.gitignore`.
 
 ## Dataset Overview
-The SCAT dataset contains historical flight trajectory data and related information used for air traffic management and research.
 
-Contents:
-- Flight Plans (FPL): Departure and arrival airports, routes, altitudes.
-- Clearances: ATC instructions like climb and descent.
-- Surveillance Data (Plots): Position reports (latitude, longitude, altitude) recorded every few seconds.
-- Predicted Trajectories: Estimated flight paths used by ATC.
-- Weather & Airspace Data: Forecast data and sector information.
+The SCAT dataset contains:
 
-Organization:
-SCAT dataset.zip
-    ├── scat20161015_20161021.zip
-    ├── scat20161112_20161118.zip
-    ├── ...
-    └── scat20170916_20170922.zip
+* Flight plans, clearances, and surveillance data (lat, lon, alt, time)
+* Predicted trajectories from ATC systems
+* Weather and airspace sector data
 
-Each inner ZIP contains thousands of JSON files, each representing one flight.
-
-Size:
-- ~5.5 GB compressed
-- >100k JSON files across 13 weeks of data.
-
-Source: https://data.mendeley.com/datasets/8yn985bwz5/1
-
----
+Source: [https://data.mendeley.com/datasets/8yn985bwz5/1](https://data.mendeley.com/datasets/8yn985bwz5/1)
+Size: \~5.5 GB compressed, >100,000 JSON files
 
 ## Problem Statement
-Develop a trajectory analysis pipeline that predicts the future positions of aircraft to improve defense system situational awareness and support early threat detection.
 
----
+Predict future flight positions using current trajectory and weather features. This supports situational awareness in defense and air traffic systems.
 
-## Steps Completed
+## Pipeline Overview
 
 ### 1. Merge Raw Files
-- Combined all weekly flight JSON/CSV files into a single merged file.
 
-### 2. Clean & Validate Flights
-- Removed rows with:
-  - NaN values (lat, lon, alt, time)
-  - Invalid coordinates (lat outside -90 to 90, lon outside -180 to 180)
-  - Negative altitude
-- Dropped duplicate entries.
-- Removed flights with fewer than 10 data points.
+* Combined all SCAT ZIP archives into one large file.
+
+### 2. Clean and Validate Flights
+
+* Removed rows with NaNs, invalid coordinates, negative altitude
+* Dropped duplicates and flights with <10 data points
 
 ### 3. Train/Val/Test Split
-- Generated `train_ids.txt`, `val_ids.txt`, and `test_ids.txt` for reproducible splits.
-- Old approach of creating 160k CSVs was abandoned in favor of a single Parquet file.
+
+* Generated `train_ids.txt`, `val_ids.txt`, `test_ids.txt`
+* Used consistent split across experiments
 
 ### 4. Switch to Single File
-- Combined all cleaned flights into `validated_data/validated_cleaned.parquet`.
-- Organized splits via text files for easy filtering.
 
-### 5. Load Utility
-- Built `load_dataset.py`:
-  - Function: `load_splits()`
-  - Loads the main Parquet file and returns train, validation, and test splits.
+* Combined cleaned flights into `validated_cleaned.parquet`
+* Retained split files for filtering
 
-### 6. Visualization Tools
-- Built `plot_trajectory.py`:
-  - Supports 2D (lat vs lon) and 3D (lat, lon, alt) plots.
-  - Added color gradient for time progression, start/end markers.
-  - Option to save plots in `plots/`.
+### 5. Data Loading Utility
 
-### 6.5 Visualization Test Script
-- Created `test_plot.py` to:
-  - Plot a specific flight (2D & 3D).
-  - Plot a random flight.
-  - Generate a multi-flight comparison (2D).
-  - Save all plots in `plots/`.
+* `load_dataset.py` with `load_splits()` function
+* Loads train, val, test splits from the Parquet file
 
-### 7 Visualization Test Script
-- Built an interactive tool to label flight trajectories as Valid or Invalid:
-  -Loads validated_cleaned.parquet.
-  -3D visualization with Plotly (Lat, Lon, Alt).
-  -Keyboard shortcuts: V (Valid), I (Invalid), S (Skip).
-  -Saves annotations to annotations.csv every 10 labels.
-  -Tracks progress in the sidebar
+### 6. Trajectory Visualization
 
----
+* `plot_trajectory.py` supports 2D and 3D plots
+* Color gradient by time, start/end markers
+* Saved to `plots/`
 
-### **8. Weather Data Integration**
-- Enhanced preprocessing to include weather features from `grib_meteo.json`:
-  - `temp`: Temperature at the aircraft's position.
-  - `wind_spd`: Wind speed.
-  - `wind_dir`: Wind direction.
-- Matching strategy:
-  - Used `cKDTree` for fast nearest-neighbor search between flight coordinates and weather grid points.
-  - Added weather columns to every trajectory point in the merged file.
-- Updated cleaning script:
-  - Validates presence of weather columns before creating `validated_cleaned.parquet`.
-  - Splits remain consistent (IDs unchanged).
-- Final validated dataset includes: ['flight_id', 'time', 'lat', 'lon', 'alt', 'temp', 'wind_spd', 'wind_dir']
+### 6.5. Visualization Test Script
 
+* `test_plot.py` for quick plotting sanity checks
+* Random samples, multi-flight comparisons
 
-## Setup
-Clone the repo and create a virtual environment:
+### 7. Annotation Tool
+
+* Streamlit-based labeling tool with Plotly 3D
+* Keyboard shortcuts: V (valid), I (invalid), S (skip)
+* Saves labels to `annotations.csv`
+
+### 8. Weather Integration
+
+* Merged `grib_meteo.json` data using KDTree
+* Added `temp`, `wind_spd`, `wind_dir` to each point
+* Updates reflected in the validated dataset
+
+### 9. EDA and Weather Visuals
+
+* Quiver plots for wind
+* Temperature color maps
+* 3D weather-aware trajectory visualization
+* Missing data statistics
+
+### 10. Feature Engineering
+
+* Computed velocity and bearing
+* Normalized lat, lon, alt, velocity, bearing
+
+### 11. Sequence Dataset Creation
+
+* Custom PyTorch dataset
+* Inputs: 20-step sequence, Outputs: next 5 steps
+* Configurable sequence length, stride, etc.
+
+### 12. GRU Forecast Model
+
+* Sequence-to-sequence GRU network
+* Configurable: hidden size, layers, learning rate
+* Trained using MSE loss and Adam optimizer
+
+### 13. Training Loop
+
+* Logs training and validation loss
+* Runs on GPU if available
+* Best model saved to `models/best.pt`
+
+### 14. Evaluation and Error Analysis
+
+* Denormalized predictions for interpretability
+* Plotted predicted vs actual trajectories
+* Failure cases saved to `error_gallery/`
+
+## Setup Instructions
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/<your-org>/dataset-research-SCAT.git
 cd dataset-research-SCAT
 
 python -m venv venv
 # Activate:
-& venv\Scripts\Activate.ps1   (Windows)
-source venv/bin/activate      (macOS/Linux)
+# Windows:
+venv\Scripts\activate
+# macOS/Linux:
+source venv/bin/activate
 
 pip install -r requirements.txt
+```
+
+## Common Commands
+
+```bash
+# Visualize a random trajectory
+python test_plot.py --mode=random
+
+# Launch the annotation tool
+streamlit run annotation_tool.py
+
+# Train the model
+python train_forecast_model.py --epochs=20
+
+# Evaluate model performance
+python eval_model.py
+```
+
+## Notes
+
+* All large datasets are excluded by `.gitignore`
+* Folder structure is retained using `.gitkeep` files to ensure reproducibility
+* Do not place real data inside version-controlled folders unless explicitly allowed

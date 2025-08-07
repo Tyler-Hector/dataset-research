@@ -1,9 +1,0 @@
-#,Student,Source,Link,Dataset Name,Type,Cleaned,Comments
-1,Sonakshi Bilas ,Kilthub,https://kilthub.cmu.edu/articles/dataset/TrajAir_A_General_Aviation_Trajectory_Dataset/14866251,TrajAir: A General Aviation Trajectory Dataset,Dataset,TRUE,
-4,Sona,arxiv,https://arxiv.org/html/2506.07585v1,Aircraft Trajectory Dataset Augmentation in Latent Space,Paper,FALSE,
-5,Ty,Zenodo,https://zenodo.org/records/13819517,Synthetic Aircraft Landing Trajectory Dataset for Oslo Airport,Dataset,TRUE,Pretty small dataset compared to soem of the others I looked at
-6,Daniel,Kaggle,https://www.kaggle.com/datasets/minhnguyen181121351/flight-trajectory-dataset/data,flight-trajectory-dataset ,unusable,FALSE,unusable
-7,Daniel,Zenodo,https://zenodo.org/records/13767132,Synthetic Aircraft Trajectory Dataset,Dataset,TRUE,Actually A good dataset
-8,Aadit,NASA Open Data Portal,https://data.nasa.gov/dataset/intex-a-dc-8-aircraft-trajectory-data,INTEX-A DC-8 Aircraft Trajectory data,Dataset,FALSE,
-9,Aadit,Kaggle,https://www.kaggle.com/datasets/open-flights/flight-route-database,Flight Route Database,unusable,FALSE,No coords
-10,Daniel,Mendeley Data,https://data.mendeley.com/datasets/8yn985bwz5/1,SCAT (Swedish Civil Air Traffic Control),Dataset,FALSE,

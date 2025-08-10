@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prediction & Metrics</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home_page') }}">Home</a></li>
+                <li><a href="{{ url_for('augmentation_page') }}">Augmentation</a></li>
+                <li><a href="{{ url_for('prediction_page') }}">Prediction</a></li>
+                <li><a href="{{ url_for('aboutus_page') }}">About Us</a></li>
+                
+            </ul>
+        </nav>
+    </header>
+
+    <h2>Run Prediction</h2>
+    <button onclick="runPrediction()">Run Prediction</button>
+
+    <h3>Predictions:</h3>
+    <pre id="predictions-output"></pre>
+
+    <h3>Metrics:</h3>
+    <pre id="metrics-output"></pre>
+
+    <img id="prediction-plot" src="" alt="Prediction Plot"/>
+
+    <script>
+        async function runPrediction() {
+            try {
+                const response = await fetch("/predict", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({}) // no input needed; path hardcoded in notebook
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    alert("Error: " + (error.error || response.statusText));
+                    return;
+                }
+
+                const data = await response.json();
+
+                document.getElementById("predictions-output").textContent =
+                    JSON.stringify(data.sample_predictions || {}, null, 2);
+
+                document.getElementById("metrics-output").textContent =
+                    JSON.stringify(data.metrics || {}, null, 2);
+
+                const plotImg = document.getElementById("prediction-plot");
+                plotImg.src = data.plot_url;
+                plotImg.style.display = "block";  // Show the image now that plot is ready
+
+            } catch (err) {
+                console.error(err);
+                alert("An error occurred while fetching prediction results.");
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,14 +1,15 @@
-This repository has all the info for the HUVTSP Technical Team 5's project for Vanguard Defense.
+# HUVTSP Technical Team 5 — Vanguard Defense
 
-Problem Statement: Military defense systems would need an anti-ballistic missile trajectory prediction model when facing fast-moving, evasive airborne threats because accurately determining the optimal interception path in real time is critical for national security and minimizing potential damage.
+## Overview
+This repository contains all files and resources for **HUVTSP Technical Team 5’s** project with **Vanguard Defense**.  
+The goal is to develop a **real-time anti-ballistic missile trajectory prediction model** to track and intercept fast-moving, evasive airborne threats.
 
-Keywords: anti ballistic missile, trajectory prediction, AI, data analysis
+## Problem Statement
+Military defense systems require accurate trajectory prediction to determine optimal interception paths in real time. This is critical for national security and minimizing potential damage.
 
-Folders:
+**Keywords:** anti-ballistic missile, trajectory prediction, AI, data analysis
 
-
-Validated Data: csv files that have been validated by the Annotation UI
-
-Annotation UI: UI for annotation tool to validate data
-
-Data Preprocessing: Files for preprocessing data and keeping datasets.
+## Repository Structure
+- **Validated Data/** — CSV files validated using the Annotation UI  
+- **Annotation UI/** — Tool for validating and reviewing data  
+- **Data Preprocessing/** — Scripts for cleaning and preparing datasets

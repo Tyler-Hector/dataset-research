@@ -1,50 +1,64 @@
 import pandas as pd
 import os
+from typing import Optional, Union, Tuple, List
+import logging
 
-def load_splits(parquet_path, split_dir, only=None, columns=None):
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+def load_splits(
+    parquet_path: str = "data/validated_data/validated_cleaned.parquet",  # ← Fixed path
+    split_dir: str = "data/validated_data",  # ← Fixed path
+    only: Optional[str] = None,
+    columns: Optional[List[str]] = None
+) -> Union[Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame], pd.DataFrame]:
     """
-    Load train, val, and test splits from the validated dataset.
-
+    Load train/val/test splits from a Parquet file with predefined flight IDs.
+    
     Args:
-        parquet_path (str): Path to the validated_cleaned.parquet file
-        split_dir (str): Directory containing train_ids.txt, val_ids.txt, test_ids.txt
-        only (str, optional): Return only one split ('train', 'val', 'test')
-        columns (list, optional): List of columns to load
-
+        parquet_path: Path to the Parquet file.
+        split_dir: Directory containing {train/val/test}_ids.txt.
+        only: If "train", "val", or "test", returns only that split.
+        columns: Optional list of columns to load (saves memory).
+    
     Returns:
-        train_df, val_df, test_df OR single DataFrame (if only is set)
+        DataFrames for requested splits.
+    
+    Example:
+        >>> train_df, val_df, test_df = load_splits("data.parquet", "splits")
     """
-    print(f"Loading dataset from {parquet_path}...")
+    if not os.path.exists(parquet_path):
+        raise FileNotFoundError(f"Parquet file not found: {parquet_path}")
 
-    df = pd.read_parquet(parquet_path, engine="fastparquet")
-
-    # Optional: select specific columns
-    if columns:
-        df = df[columns]
+    # Load data with fallback engine support
+    try:
+        df = pd.read_parquet(parquet_path, columns=columns, engine="fastparquet")
+    except ImportError:
+        logger.warning("fastparquet not found, falling back to pyarrow")
+        df = pd.read_parquet(parquet_path, columns=columns, engine="pyarrow")
 
     # Load split IDs
-    def read_ids(filename):
+    def read_ids(filename: str) -> set:
         path = os.path.join(split_dir, filename)
+        if not os.path.exists(path):
+            raise FileNotFoundError(f"Split file not found: {path}")
         with open(path, "r") as f:
-            return set(line.strip() for line in f)
+            return {line.strip() for line in f}
 
     train_ids = read_ids("train_ids.txt")
     val_ids = read_ids("val_ids.txt")
     test_ids = read_ids("test_ids.txt")
 
-    # Create splits (convert flight_id to string for consistency
+    # Filter splits (convert IDs to strings for consistency)
     df["flight_id"] = df["flight_id"].astype(str)
     train_df = df[df["flight_id"].isin(train_ids)]
     val_df = df[df["flight_id"].isin(val_ids)]
     test_df = df[df["flight_id"].isin(test_ids)]
 
-    print(f"✔ Loaded: Train={train_df.shape}, Val={val_df.shape}, Test={test_df.shape}")
+    logger.info(f"Loaded splits - Train: {len(train_df):,} rows | Val: {len(val_df):,} | Test: {len(test_df):,}")
 
-    if only == "train":
-        return train_df
-    elif only == "val":
-        return val_df
-    elif only == "test":
-        return test_df
-    else:
-        return train_df, val_df, test_df
+    return {
+        "train": train_df,
+        "val": val_df,
+        "test": test_df
+    }.get(only, (train_df, val_df, test_df))

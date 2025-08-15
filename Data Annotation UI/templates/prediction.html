@@ -3,64 +3,68 @@
 <head>
     <title>Prediction & Metrics</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="{{ url_for('home_page') }}">Home</a></li>
-                <li><a href="{{ url_for('augmentation_page') }}">Augmentation</a></li>
-                <li><a href="{{ url_for('prediction_page') }}">Prediction</a></li>
-                <li><a href="{{ url_for('aboutus_page') }}">About Us</a></li>
-                
-            </ul>
-        </nav>
-    </header>
+<header>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('home_page') }}">Home</a></li>
+            <li><a href="{{ url_for('augmentation_page') }}">Augmentation</a></li>
+            <li><a href="{{ url_for('prediction_page') }}">Prediction</a></li>
+            <li><a href="{{ url_for('aboutus_page') }}">About Us</a></li>
+        </ul>
+    </nav>
+</header>
 
-    <h2>Run Prediction</h2>
-    <button onclick="runPrediction()">Run Prediction</button>
+<h2>Upload CSV for Prediction</h2>
+<input type="file" id="fileInput" accept=".csv" />
+<button onclick="uploadAndPredict()">Run Prediction</button>
 
-    <h3>Predictions:</h3>
-    <pre id="predictions-output"></pre>
+<h3>Predictions:</h3>
+<pre id="predictions-output"></pre>
 
-    <h3>Metrics:</h3>
-    <pre id="metrics-output"></pre>
+<h3>Metrics:</h3>
+<pre id="metrics-output"></pre>
 
-    <img id="prediction-plot" src="" alt="Prediction Plot"/>
+<img id="prediction-plot" src="" alt="Prediction Plot" style="display:none; max-width:600px; margin-top: 10px;"/>
 
-    <script>
-        async function runPrediction() {
-            try {
-                const response = await fetch("/predict", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({}) // no input needed; path hardcoded in notebook
-                });
+<script>
+async function uploadAndPredict() {
+    const fileInput = document.getElementById('fileInput');
+    if (!fileInput.files.length) {
+        alert('Please select a CSV file first!');
+        return;
+    }
+    const formData = new FormData();
+    formData.append('file', fileInput.files[0]);
 
-                if (!response.ok) {
-                    const error = await response.json();
-                    alert("Error: " + (error.error || response.statusText));
-                    return;
-                }
-
-                const data = await response.json();
-
-                document.getElementById("predictions-output").textContent =
-                    JSON.stringify(data.sample_predictions || {}, null, 2);
-
-                document.getElementById("metrics-output").textContent =
-                    JSON.stringify(data.metrics || {}, null, 2);
-
-                const plotImg = document.getElementById("prediction-plot");
-                plotImg.src = data.plot_url;
-                plotImg.style.display = "block";  // Show the image now that plot is ready
-
-            } catch (err) {
-                console.error(err);
-                alert("An error occurred while fetching prediction results.");
-            }
+    try {
+        const response = await fetch('{{ url_for("upload_predict") }}', {
+            method: 'POST',
+            body: formData
+        });
+        if (!response.ok) {
+            const err = await response.json();
+            alert('Error: ' + (err.error || 'Unknown error'));
+            return;
         }
-    </script>
+        const data = await response.json();
+
+        document.getElementById('predictions-output').textContent =
+            JSON.stringify(data.sample_predictions, null, 2);
+        document.getElementById('metrics-output').textContent =
+            JSON.stringify(data.metrics, null, 2);
+
+        const plotImg = document.getElementById('prediction-plot');
+        plotImg.src = "/static/prediction_plot.png?t=" + new Date().getTime();  // load fresh plot
+        plotImg.style.display = 'block';
+
+       
+    } catch (e) {
+        alert('Failed to get prediction results.');
+        console.error(e);
+    }
+}
+</script>
 </body>
 </html>

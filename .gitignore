@@ -2,15 +2,25 @@
 # PROJECT-SPECIFIC EXCLUSIONS
 # ===============================
 
-# Datasets and output directories
-data/
-models/
-error_gallery/
-plots/
-validated_data/
-processed_data/
-raw_data/
-temp_data/
+# Datasets and output directories (ignore contents but keep folders)
+data/processed/*
+data/raw/*
+data/temp/*
+data/validated/*
+data/splits/*
+models/*
+error_gallery/*
+plots/*
+
+# Keep placeholder files so empty dirs remain in repo
+!data/processed/.gitkeep
+!data/raw/.gitkeep
+!data/temp/.gitkeep
+!data/validated/.gitkeep
+!data/splits/.gitkeep
+!models/.gitkeep
+!error_gallery/.gitkeep
+!plots/.gitkeep
 
 # Large file types
 *.csv

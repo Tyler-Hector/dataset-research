@@ -7,8 +7,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def load_splits(
-    parquet_path: str = "data/validated_data/validated_cleaned.parquet",  # ← Fixed path
-    split_dir: str = "data/validated_data",  # ← Fixed path
+    parquet_path: str = "data/validated_data/validated_cleaned.parquet",  
+    split_dir: str = "data/validated_data", 
     only: Optional[str] = None,
     columns: Optional[List[str]] = None
 ) -> Union[Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame], pd.DataFrame]:

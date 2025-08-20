@@ -26,7 +26,8 @@
 <h3>Metrics:</h3>
 <pre id="metrics-output"></pre>
 
-<img id="prediction-plot" src="" alt="Prediction Plot" style="display:none; max-width:600px; margin-top: 10px;"/>
+<!-- ✅ fixed the id so JS matches -->
+<img id="predictionPlot" src="" alt="Prediction Plot" style="display:none; max-width:600px; margin-top: 10px;"/>
 
 <script>
 async function uploadAndPredict() {
@@ -55,11 +56,11 @@ async function uploadAndPredict() {
         document.getElementById('metrics-output').textContent =
             JSON.stringify(data.metrics, null, 2);
 
-        const plotImg = document.getElementById('prediction-plot');
-        plotImg.src = "/static/prediction_plot.png?t=" + new Date().getTime();  // load fresh plot
+        // ✅ This now updates correctly
+        const plotImg = document.getElementById("predictionPlot");
+        plotImg.src = "{{ url_for('static', filename='plots/prediction_plot.png') }}?v=" + new Date().getTime();
         plotImg.style.display = 'block';
 
-       
     } catch (e) {
         alert('Failed to get prediction results.');
         console.error(e);
